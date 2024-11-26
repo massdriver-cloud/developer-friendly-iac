@@ -364,6 +364,11 @@ airlock opentofu output variables.json > variables.tf
 
 # Validate inputs with all the power of JSON schema validation and $refs
 airlock validate -d my-environment.tfvars.json -s variables.json
+
+# Validate contracts between modules
+tofu apply
+tofu output -json | jq .bucket.value > bucket-artifact.json
+airlock validate -d bucket-artifact.json -s contracts/bucket.json
 ```
 ---
 
