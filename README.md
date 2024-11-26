@@ -131,3 +131,55 @@ By the end of this lab, your module will:
 - Automatically configure SNS notifications for specified event types, reducing the need for manual setup.  
 
 This lab demonstrates how **survey-based inputs** bridge the gap between operational expertise and developer workflows.
+
+### **[Lab 3: Use-Case Presets](./lab3)**
+
+#### **Objective**
+
+In this lab, we’ll learn how **use-case presets** can simplify the adoption of IaC modules by providing developers with pre-defined configurations tailored to common scenarios. Presets allow teams to encode operational expertise into `.tfvars` files, offering a quick starting point for developers to address the 'blank slate' problem.
+
+---
+
+### **What You'll Do**
+
+1. **Create Use-Case Presets:**  
+   - You'll create `.tfvars` files that define configurations for specific use cases of the Application Asset Storage module.
+   - For example, you might configure a bucket for **User Profile Pictures** or **Temporary File Uploads**.
+
+2. **Understand How Presets Work:**  
+   - Learn how `.tfvars` files can encode organizational standards into easily reusable templates.
+   - See how developers can use these presets as a starting point, customizing them as needed for specific workloads.
+
+---
+
+### **Business Context**
+
+Use-case presets reduce the cognitive load for developers by providing thoughtfully designed, pre-configured options. They help achieve:
+
+- **Faster Onboarding:** New developers can start using IaC modules without needing deep operational knowledge.
+- **Consistency:** Presets ensure that organizational standards are applied consistently across different teams and projects.
+- **Efficiency:** Ops teams can encode their expertise once, reducing the need for repeated consultations or support.
+
+---
+
+#### **Presets We’ll Create**
+
+1. **User Profile Pictures**  
+   - Indefinite retention policy for long-term storage.  
+   - Persistent versioning to retain all changes to files.  
+   - Notifications enabled for object creation events.
+
+2. **Temporary File Uploads**  
+   - Ephemeral retention policy with files deleted after 7 days.  
+   - No versioning since changes or overwrites aren't tracked.  
+   - Notifications disabled to reduce unnecessary overhead.
+
+---
+
+### **Expected Outcome**
+
+By the end of this lab, your module will have:  
+1. A set of `.tfvars` files representing common use cases for the Application Asset Storage module.  
+2. A clear understanding of how presets enable developer-friendly IaC while maintaining operational guardrails.
+
+This lab demonstrates how **use-case presets** align developer needs with organizational standards, creating a seamless balance between flexibility and control.
