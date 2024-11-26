@@ -14,7 +14,7 @@ resource "aws_s3_bucket" "this" {
   force_destroy = false
 }
 
-resource "aws_s3_bucket_public_access_block" "public_access_block" {
+resource "aws_s3_bucket_public_access_block" "this" {
   bucket = aws_s3_bucket.this.id
 
   block_public_acls       = true

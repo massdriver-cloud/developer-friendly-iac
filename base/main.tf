@@ -3,7 +3,7 @@ resource "aws_s3_bucket" "this" {
   force_destroy = var.force_destroy
 }
 
-resource "aws_s3_bucket_public_access_block" "public_access_block" {
+resource "aws_s3_bucket_public_access_block" "this" {
   bucket = aws_s3_bucket.this.id
 
   block_public_acls       = var.block_public_acls
@@ -12,7 +12,7 @@ resource "aws_s3_bucket_public_access_block" "public_access_block" {
   restrict_public_buckets = var.restrict_public_buckets
 }
 
-resource "aws_s3_bucket_versioning" "versioning" {
+resource "aws_s3_bucket_versioning" "this" {
   bucket = aws_s3_bucket.this.id
 
   versioning_configuration {
@@ -20,7 +20,7 @@ resource "aws_s3_bucket_versioning" "versioning" {
   }
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
+resource "aws_s3_bucket_lifecycle_configuration" "this" {
   bucket = aws_s3_bucket.this.id
 
   dynamic "rule" {
