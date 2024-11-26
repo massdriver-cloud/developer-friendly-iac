@@ -64,3 +64,20 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     }
   }
 }
+
+resource "aws_sns_topic" "this" {
+  count = length(var.notify_events) > 0 ? 1 : 0
+  name  = "${aws_s3_bucket.this.bucket}-notifications"
+}
+
+resource "aws_s3_bucket_notification" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  dynamic "topic" {
+    for_each = length(var.notify_events) > 0 ? [aws_sns_topic.this[0].arn] : []
+    content {
+      topic_arn = topic.value
+      events    = var.notify_events
+    }
+  }
+}

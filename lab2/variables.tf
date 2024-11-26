@@ -13,8 +13,8 @@ variable "versioning_policy" {
   type        = string
   default     = "none"
   validation {
-    condition     = contains(["none", "persistent", "audit", "immutable"], var.versioning_policy)
-    error_message = "Invalid versioning policy. Must be one of: none, persistent, audit, immutable."
+    condition     = contains(["none", "persistent", "audit"], var.versioning_policy)
+    error_message = "Invalid versioning policy. Must be one of: none, persistent, audit."
   }
 }
 
@@ -27,4 +27,10 @@ variable "region" {
 variable "name_prefix" {
   description = "Name prefix for all resources."
   type        = string
+}
+
+variable "notify_events" {
+  description = "A list of S3 events to notify on (e.g., s3:ObjectCreated:*, s3:ObjectRemoved:*). Leave empty for no notifications."
+  type        = list(string)
+  default     = []
 }

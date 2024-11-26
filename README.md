@@ -36,6 +36,10 @@ These buckets are critical to the functionality of many applications, so enforci
 
 ---
 
+Here’s the updated structure with consistent sections for both Lab 1 and Lab 2:
+
+---
+
 ### **[Lab 1: Operational Abstractions](./lab1)**
 
 In this lab, we’ll step into the role of the ops team to codify our organization’s **non-negotiable rules** for managing application asset storage.
@@ -67,3 +71,63 @@ All buckets must enforce one of the following retention policies:
 
 ##### **Access Control Defaults to Private**
 - All buckets are private by default to ensure data is not exposed unintentionally.
+
+---
+
+#### **Business Context**
+
+These hardcoded rules ensure **organizational standards** are consistently applied while reducing the risk of misconfiguration. They also provide **guardrails** for developers, ensuring the infrastructure aligns with operational policies.
+
+---
+
+#### **Expected Outcome**
+
+By the end of this lab, your module will:
+- Enforce **mandatory retention policies** for all buckets.
+- Prevent accidental deletion of buckets with the **force_destroy** safeguard.
+- Ensure all buckets are **private by default**, reducing data exposure risks.
+
+You’ll see how embedding **operational abstractions** creates a foundation of organizational policies that scales across teams.
+
+---
+
+### **[Lab 2: Survey-Based Inputs](./lab2)**
+
+In this lab, we’ll extend the Application Asset Storage module to better reflect how an ops team collaborates with developers to create infrastructure tailored to their needs.
+
+---
+
+#### **Our Business Rules**
+
+As an organization, we aim to make buckets easy for developers to configure while maintaining guardrails that align with operational requirements. The following **survey-based inputs** have been introduced to simplify developer decision-making:
+
+---
+
+##### **Versioning Policies**
+Developers select from predefined policies to manage object versioning:
+- **None:** No versioning applied.  
+- **Persistent:** Keeps all object versions indefinitely.  
+- **Audit:** Retains non-current object versions for one year.  
+
+---
+
+##### **Notifications for Events**
+Developers can specify a list of S3 events (e.g., `s3:ObjectCreated:*`, `s3:ObjectRemoved:*`) to trigger notifications.  
+- An SNS topic is automatically created for event notifications.  
+- This simplifies building event-driven workflows while ensuring consistency in notification setup.
+
+---
+
+#### **Business Context**
+
+By embedding these survey-based inputs into the module, we’re providing developers with an interface that aligns with their needs without exposing the complexity of underlying S3 configurations. This approach improves **developer experience** while reducing operational overhead.
+
+---
+
+#### **Expected Outcome**
+
+By the end of this lab, your module will:
+- Offer **developer-friendly versioning policies** to manage object retention.  
+- Automatically configure SNS notifications for specified event types, reducing the need for manual setup.  
+
+This lab demonstrates how **survey-based inputs** bridge the gap between operational expertise and developer workflows.
