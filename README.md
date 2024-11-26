@@ -40,6 +40,10 @@ Here’s the updated structure with consistent sections for both Lab 1 and Lab 2
 
 ---
 
+## **Labs**
+
+Each lab directory contains a complete Terraform module for the use case described in the lab.
+
 ### **[Lab 1: Operational Abstractions](./lab1)**
 
 In this lab, we’ll step into the role of the ops team to codify our organization’s **non-negotiable rules** for managing application asset storage.
@@ -183,3 +187,141 @@ By the end of this lab, your module will have:
 2. A clear understanding of how presets enable developer-friendly IaC while maintaining operational guardrails.
 
 This lab demonstrates how **use-case presets** align developer needs with organizational standards, creating a seamless balance between flexibility and control.
+
+### **[Lab 4: Derived Naming and Tags](./lab4)**
+
+#### **Objective**
+
+In this lab, we’ll design a submodule to standardize **naming conventions** and **tagging** for all resources. By centralizing these patterns, we’ll ensure resources are identifiable, compliant with organizational standards, and easy to manage across projects and teams.
+
+---
+
+### **What You'll Do**
+
+1. **Create a Naming and Tagging Submodule:**  
+   - You’ll build a reusable submodule that takes common inputs such as project name, environment, and resource name.
+   - The submodule will generate a consistent `name_prefix` and include a random suffix to ensure uniqueness.
+   - Additionally, the submodule will return a standardized set of tags based on these inputs.
+
+2. **Explore Practical Applications:**  
+   - Understand why consistent naming and tagging conventions matter for resource discovery, cost allocation, and compliance.
+   - Learn how this submodule can be integrated into other modules to eliminate repetitive work and human error.
+
+---
+
+### **Business Context**
+
+Naming and tagging resources consistently is crucial for any organization’s cloud infrastructure. A well-designed system provides:
+
+- **Discoverability:** Easily identify resources across environments and projects.  
+- **Cost Attribution:** Track cloud expenses back to specific teams or projects.  
+- **Compliance:** Ensure all resources meet tagging policies for audits and governance.  
+
+---
+
+### **Inputs and Outputs**
+
+The submodule will use the following **inputs**:  
+- **`project`**: The project or application the resource belongs to.  
+- **`environment`**: The environment/stage (e.g., `prod`, `qa`, `staging`).  
+- **`name`**: A name for this instance of the module (e.g., `session-cache`, `page-cache`).  
+- **`team`**: The team responsible for the resource (optional but recommended). 
+
+The submodule will output:  
+- **`name_prefix`**: A consistent name for resources based on the inputs, formatted as `project-env-name-suffix`.  
+- **`suffix`**: A randomly generated 4-character string to ensure uniqueness.  
+- **`tags`**: A map of key-value pairs including all the inputs above.
+
+---
+
+### **Opinionated Notes**
+
+- **Avoid Overloading Names**: Some organizations like to include additional information, such as the region or org name (`myorg-prod-us-east`). This can clutter names unnecessarily since the ARN already contains the region and account details.  
+- **Random Suffixes**: Adding a random suffix prevents naming collisions without polluting the prefix. This is especially useful for resources like S3 buckets or DynamoDB tables that require globally unique names.  
+- **Minimal Inputs, Maximum Clarity**: Only include meaningful inputs that add value to the resource’s name or tags. Avoid unnecessary verbosity.  
+- **Don't Include Team in Name**: Teams can change ownership of projects, but most cloud resources cannot be renamed. For attributes that are subject to change but still need to be included, use tags instead of embedding them in resource names.
+
+---
+
+### **Expected Outcome**
+
+By the end of this lab, your submodule will:  
+1. Accept `project`, `environment`, `name`, and `team` as inputs.  
+2. Generate a consistent `name_prefix` and random `suffix` for resource uniqueness.  
+3. Produce a standardized map of `tags` for downstream modules to use.
+4. Set names and tags for all resources in the root module from the child modules outputs.
+
+This submodule will provide a reusable foundation for your IaC ecosystem, promoting **clarity, consistency, and scalability**.  
+
+### **[Lab 5: IAM Policies as Outputs](./lab5)**
+
+#### **Objective**
+
+In this lab, we’ll extend the Application Asset Storage module to output granular IAM policies that developers and applications can use to interact with the bucket. These policies will encode best practices for secure access while allowing flexibility for various use cases, such as read-only access, CRUD operations, and notification subscriptions.
+
+---
+
+### **What You'll Do**
+
+1. **Define Granular IAM Policies**:  
+   - Create and output three IAM policies tailored to specific use cases:
+     - **Read Policy**: Grants read-only access, including the ability to list objects in the bucket.
+     - **CRUD Policy**: Grants full control over bucket objects (create, read, update, delete).
+     - **Subscribe Policy**: Grants permission to publish notifications to an SNS topic (if notifications are enabled).
+
+2. **Output Policies**:  
+   - Instead of exposing raw JSON policy documents, the module will output a map of IAM policy ARNs, making it easy for downstream modules or applications to attach the appropriate policies.
+
+---
+
+#### **Business Context**
+
+Applications and teams often need distinct levels of access to the same bucket. By providing pre-defined IAM policies as outputs, we:  
+
+- **Reduce Risk**: Developers can only select from pre-approved access levels, minimizing the risk of over-permissioning.  
+- **Encourage Best Practices**: Teams don’t need to manually craft IAM policies, reducing errors and promoting consistency.  
+- **Streamline Integration**: Policies are ready to attach to roles or users without additional setup.  
+
+---
+
+#### **IAM Policies**
+
+The following policies will be available as outputs:
+
+---
+
+##### **Read Policy**
+Grants read-only access, including the ability to list objects:  
+- **Use Case**: Applications or services that need to fetch and display objects without modifying them.  
+- **Actions**:  
+  - `s3:GetObject`  
+  - `s3:ListBucket`  
+
+---
+
+##### **CRUD Policy**
+Grants full control over bucket objects:  
+- **Use Case**: Services or applications that create, read, update, and delete objects.  
+- **Actions**:  
+  - `s3:GetObject`  
+  - `s3:ListBucket`  
+  - `s3:PutObject`  
+  - `s3:DeleteObject`  
+
+---
+
+##### **Subscribe Policy**
+Grants the ability to publish notifications to the SNS topic (if notifications are enabled):  
+- **Use Case**: Event-driven workflows that need to act on bucket changes.  
+- **Actions**:  
+  - `sns:Publish`  
+
+---
+
+### **Expected Outcome**
+
+By the end of this lab, your module will:  
+1. Output a map of IAM policy ARNs (`policies`) with keys for `read`, `crud`, and `subscribe`.  
+2. Automatically include the `subscribe` policy if event notifications are configured.  
+
+This lab demonstrates how **IAM policies as outputs** enhance modularity, security, and ease of integration, making it simple for developers to attach the correct policies to their applications.  

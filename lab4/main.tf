@@ -17,8 +17,16 @@ locals {
   versioning_rules = local.versioning_policies[var.versioning_policy]
 }
 
+module "metadata" {
+  source = "./modules/resource-naming-and-tagging"
+  project = var.project
+  environment = var.environment
+  name = var.name
+  team = var.team
+}
+
 resource "aws_s3_bucket" "this" {
-  bucket_prefix  = var.name_prefix
+  bucket_prefix  = module.metadata.name
   force_destroy  = false
 }
 

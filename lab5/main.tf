@@ -17,8 +17,16 @@ locals {
   versioning_rules = local.versioning_policies[var.versioning_policy]
 }
 
+module "metadata" {
+  source = "./modules/resource-naming-and-tagging"
+  project = var.project
+  environment = var.environment
+  name = var.name
+  team = var.team
+}
+
 resource "aws_s3_bucket" "this" {
-  bucket_prefix  = var.name_prefix
+  bucket_prefix  = module.metadata.name
   force_destroy  = false
 }
 
@@ -103,6 +111,68 @@ resource "aws_sns_topic_policy" "this" {
             "aws:SourceArn": aws_s3_bucket.this.arn
           }
         }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "read" {
+  name        = "${module.metadata.name}-read-policy"
+  description = "IAM policy for read-only access to the bucket."
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket"
+        ],
+        Resource = [
+          aws_s3_bucket.this.arn,
+          "${aws_s3_bucket.this.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "crud" {
+  name        = "${module.metadata.name}-crud-policy"
+  description = "IAM policy for full CRUD access to the bucket."
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ],
+        Resource = [
+          aws_s3_bucket.this.arn,
+          "${aws_s3_bucket.this.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "subscribe" {
+  count       = length(var.notify_events) > 0 ? 1 : 0
+  name        = "${module.metadata.name}-subscribe-policy"
+  description = "IAM policy for subscribing to bucket events."
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "sns:Publish"
+        ],
+        Resource = aws_sns_topic.this[0].arn
       }
     ]
   })
