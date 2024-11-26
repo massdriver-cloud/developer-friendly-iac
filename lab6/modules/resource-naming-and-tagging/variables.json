@@ -1,0 +1,35 @@
+{
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "name",
+      "description": "A name for this instance of the module (e.g., session-cache, page-cache).",
+      "minLength": 1,
+      "maxLength": 15
+    },
+    "team": {
+      "type": "string",
+      "title": "team",
+      "description": "The team responsible for the resource.",
+      "maxLength": 30
+    },
+    "project": {
+      "type": "string",
+      "title": "project",
+      "description": "The project the resource belongs to (e.g., user-service, analytics).",
+      "maxLength": 15
+    },
+    "environment": {
+      "type": "string",
+      "title": "environment",
+      "description": "The environment or stage (e.g., prod, qa, staging).",
+      "enum": ["prod", "qa", "staging", "preview"]
+    }
+  },
+  "required": [
+    "environment",
+    "name",
+    "project",
+    "team"
+  ]
+}

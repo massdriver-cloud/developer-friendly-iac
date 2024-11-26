@@ -9,11 +9,14 @@ output "sns_topic_arn" {
   description = "SNS topic ARN for bucket notifications."
 }
 
-output "policies" {
+output "bucket" {
+  description = "S3 bucket attributes and policies."
   value = {
-    read       = aws_iam_policy.read.arn
-    crud       = aws_iam_policy.crud.arn
-    subscribe  = length(var.notify_events) > 0 ? aws_iam_policy.subscribe[0].arn : null
+    arn = aws_s3_bucket.this.arn
+    policies = {
+      read      = aws_iam_policy.read.arn
+      crud      = aws_iam_policy.crud.arn
+      subscribe = aws_iam_policy.subscribe[0].arn
+    }
   }
-  description = "Map of IAM policy ARNs for the bucket."
 }

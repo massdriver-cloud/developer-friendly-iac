@@ -13,21 +13,21 @@ locals {
   }
 
   enable_notifications = length(var.notify_events) > 0 ? 1 : 0
-  lifecycle_rules = local.retention_policies[var.retention_policy]
-  versioning_rules = local.versioning_policies[var.versioning_policy]
+  lifecycle_rules      = local.retention_policies[var.retention_policy]
+  versioning_rules     = local.versioning_policies[var.versioning_policy]
 }
 
 module "metadata" {
-  source = "./modules/resource-naming-and-tagging"
-  project = var.project
-  environment = var.environment
-  name = var.name
-  team = var.team
+  source      = "./modules/resource-naming-and-tagging"
+  project     = var.metadata.project
+  environment = var.metadata.environment
+  name        = var.metadata.name
+  team        = var.metadata.team
 }
 
 resource "aws_s3_bucket" "this" {
-  bucket_prefix  = module.metadata.name
-  force_destroy  = false
+  bucket_prefix = module.metadata.name
+  force_destroy = false
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {
@@ -104,11 +104,11 @@ resource "aws_sns_topic_policy" "this" {
         Principal = {
           Service = "s3.amazonaws.com"
         },
-        Action = "SNS:Publish",
+        Action   = "SNS:Publish",
         Resource = aws_sns_topic.this[0].arn,
         Condition = {
           ArnLike = {
-            "aws:SourceArn": aws_s3_bucket.this.arn
+            "aws:SourceArn" : aws_s3_bucket.this.arn
           }
         }
       }
@@ -119,7 +119,7 @@ resource "aws_sns_topic_policy" "this" {
 resource "aws_iam_policy" "read" {
   name        = "${module.metadata.name}-read-policy"
   description = "IAM policy for read-only access to the bucket."
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
@@ -140,7 +140,7 @@ resource "aws_iam_policy" "read" {
 resource "aws_iam_policy" "crud" {
   name        = "${module.metadata.name}-crud-policy"
   description = "IAM policy for full CRUD access to the bucket."
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
@@ -164,7 +164,7 @@ resource "aws_iam_policy" "subscribe" {
   count       = length(var.notify_events) > 0 ? 1 : 0
   name        = "${module.metadata.name}-subscribe-policy"
   description = "IAM policy for subscribing to bucket events."
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {

@@ -325,3 +325,90 @@ By the end of this lab, your module will:
 2. Automatically include the `subscribe` policy if event notifications are configured.  
 
 This lab demonstrates how **IAM policies as outputs** enhance modularity, security, and ease of integration, making it simple for developers to attach the correct policies to their applications.  
+
+### **[Lab 6: Using Airlock and JSON Schemas](./lab6)**
+
+#### **Objective**
+
+In this lab, we’ll integrate **[Airlock](https://github.com/massdriver-cloud/airlock)** to manage inputs and outputs using **JSON Schemas**. This approach reduces boilerplate, creates consistent contracts between modules, and enables validation to catch breaking changes early in the development lifecycle.
+
+---
+
+#### **What You'll Do**
+
+1. **Generate Input Schemas**:
+   - Replace `.tfvars` files with a JSON schema for your module’s variables.
+   - Use Airlock to automatically generate `variables.json` and synchronize it with Terraform.
+
+2. **Embed the Naming Module Schema**:
+   - Generate a schema for the **naming module** and reference it in the main module.
+   - Move naming-related variables into a `metadata` object and formalize them using a shared schema.
+
+3. **Create Output Schemas**:
+   - Define structured outputs for the S3 bucket, including attributes like `ARN` and IAM `policies`.
+   - Use JSON schemas to validate and document the outputs.
+
+4. **Integrate Airlock into CI**:
+   - Automate schema generation and validation in your CI/CD pipeline to ensure consistency and detect breaking changes early.
+
+Quick tutorial on how to use Airlock CLI
+
+```shell
+# Locally generate the schema for the inputs and commit to the repo
+airlock opentofu input ./path/to/your/module > variables.json
+
+# 'variables.json' is now your interface to your modules
+
+# In CI (or you can generate with precommit if you dont want to run this in CI) to generate the variables.tf
+airlock opentofu output variables.json > variables.tf
+
+# Validate inputs with all the power of JSON schema validation and $refs
+airlock validate -d my-environment.tfvars.json -s variables.json
+```
+---
+
+#### **Our Business Rules**
+
+As an organization, we prioritize **consistency** and **maintainability** in our Infrastructure as Code. JSON schemas help us enforce contracts and automate the tedious management of variables and outputs.
+
+---
+
+##### **Schemas for Inputs**
+- Inputs are defined as a JSON schema (`variables.json`) that captures the structure and validation of all module variables.
+- These schemas replace `.tfvars` files and ensure input consistency.
+
+---
+
+##### **Schemas for Outputs**
+- Outputs are formalized into a structured schema (`outputs.json`), defining a clear contract for downstream modules.
+- Example: The `bucket` output includes an `ARN` key and a `policies` map for IAM policy ARNs.
+
+---
+
+##### **Shared Schemas**
+- Shared schemas (`$ref`) eliminate duplication for common structures like metadata or outputs.
+- Example: The `metadata` schema, used across multiple modules, standardizes naming and tagging conventions.
+
+---
+
+#### **Business Context**
+
+Integrating **Airlock** and JSON schemas into your workflow unlocks significant benefits:
+
+- **Contracts, Not Guesswork**: Inputs and outputs become clear, documented contracts, reducing ambiguity for module consumers.  
+- **Automation**: Airlock automates schema generation and Terraform synchronization, reducing human error.  
+- **Pre-Production Validation**: Catch breaking changes early with schema validation in CI pipelines.  
+- **Reusable Components**: Shared schemas streamline collaboration and ensure consistency across your IaC ecosystem.
+
+---
+
+#### **Expected Outcome**
+
+By the end of this lab, your module will:
+
+1. Replace `.tfvars` files with a JSON schema for inputs.
+2. Formalize outputs like the S3 bucket and IAM policies into a schema.
+3. Embed the naming module schema into the main module, eliminating redundant definitions.
+4. Automate schema generation and validation using Airlock in CI/CD pipelines.
+
+This lab demonstrates how **Airlock and JSON Schemas** simplify infrastructure management while enhancing consistency and scalability across teams.  

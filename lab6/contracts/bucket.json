@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "arn": {
+      "type": "string",
+      "description": "The ARN of the S3 bucket."
+    },
+    "policies": {
+      "type": "object",
+      "description": "A map of policy names to their ARNs.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "description": "The ARN of an IAM policy."
+      }
+    }
+  },
+  "required": ["arn", "policies"],
+  "additionalProperties": false
+}

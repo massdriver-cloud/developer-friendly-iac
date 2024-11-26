@@ -30,23 +30,12 @@ variable "notify_events" {
   default     = []
 }
 
-variable "project" {
-  description = "The project the resource belongs to (e.g., user-service, analytics)."
-  type        = string
-}
-
-variable "environment" {
-  description = "The environment or stage (e.g., prod, qa, staging)."
-  type        = string
-}
-
-variable "name" {
-  description = "A name for this instance of the module (e.g., session-cache, page-cache)."
-  type        = string
-}
-
-variable "team" {
-  description = "The team responsible for the resource (optional)."
-  type        = string
-  default     = null
+variable "metadata" {
+  description = "Metadata about the resource including project, environment, name and team"
+  type = object({
+    project     = string
+    environment = string
+    name        = string
+    team        = optional(string)
+  })
 }

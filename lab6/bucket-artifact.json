@@ -1,0 +1,8 @@
+{
+  "arn": "arn:aws:s3:::profiles-prod-avatars-or7o20241126172706123500000001",
+  "policies": {
+    "crud": "arn:aws:iam::083014189801:policy/profiles-prod-avatars-or7o-crud-policy",
+    "read": "arn:aws:iam::083014189801:policy/profiles-prod-avatars-or7o-read-policy",
+    "subscribe": "arn:aws:iam::083014189801:policy/profiles-prod-avatars-or7o-subscribe-policy"
+  }
+}

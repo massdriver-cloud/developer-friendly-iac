@@ -1,0 +1,41 @@
+{
+  "properties": {
+    "notify_events": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "notify_events",
+      "description": "A list of S3 events to notify on (e.g., s3:ObjectCreated:*, s3:ObjectRemoved:*). Leave empty for no notifications.",
+      "default": []
+    },
+    "metadata": {
+      "$ref": "./modules/resource-naming-and-tagging/variables.json"
+    },
+    "retention_policy": {
+      "type": "string",
+      "title": "retention_policy",
+      "description": "Defines how long objects are retained in the bucket.",
+      "default": "indefinite"
+    },
+    "versioning_policy": {
+      "type": "string",
+      "title": "versioning_policy",
+      "description": "Controls versioning and object retention behavior.",
+      "default": "none"
+    },
+    "region": {
+      "type": "string",
+      "title": "region",
+      "description": "Region for the S3 bucket.",
+      "default": "us-east-1"
+    }
+  },
+  "required": [
+    "metadata",
+    "notify_events",
+    "region",
+    "retention_policy",
+    "versioning_policy"
+  ]
+}
